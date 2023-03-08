@@ -11,29 +11,58 @@ class Trie:
         self.root = Node(None, None)
         self.current_node: Node = self.root
         self.root = Node('')
-        self.curr = self.root
+        self.insert_curr = self.root
+        self.search_curr = self.root
+
 
     def insert(self, key: str) -> Node:
-        self.curr = self.root
+        # print(self.root.children)
+        self.insert_curr = self.root
         """Key must be strictly an string"""
         key_size = len(key)
+
+
         for letter in list(key):
-             present = self.root.children.get(letter)
 
+            # print("current root => ", self.insert_curr, "global root => ", self.root)
+
+            present = self.insert_curr.children.get(letter, None)
+            # print(present, letter, key)
              #If the letter already exists as a child
-             if present:
-                  self.curr = present
-            
+            if present is not None:
+                self.insert_curr = present
+                # print(self.insert_curr, self.insert_curr.letter, self.insert_curr.children)
+
             #Otherwise
-             else:
-                  new_node = Node(letter=letter)
-                  self.curr.children[letter] = new_node
-                  self.curr = new_node
-        return self.curr
+            else:
+                new_node = Node(letter=letter)
+                self.insert_curr.children[letter] = new_node
+                self.insert_curr = new_node
+                # print("inserted ", self.insert_curr, new_node)
+        # print()
+        return self.insert_curr
 
 
-    def search(self, pattern):
-            pass
+    def search(self, pattern: str, default=None, restart: bool=True):
+        # print(self.root.children)
+        if restart:
+            self.search_curr = self.root
+
+        pattern_size = len(pattern)
+        for letter in list(pattern):
+            # print(self.search_curr.letter)
+            present = self.search_curr.children.get(letter, None)
+            # print(letter, present)
+            if present is not None:
+                self.search_curr = present
+                # print(self.search_curr.letter)
+
+            else:
+                if default is None:
+                    raise KeyError
+                else:
+                    return (default, 0)
+        return (self.search_curr, 1)
 
     def delete(self):
         pass

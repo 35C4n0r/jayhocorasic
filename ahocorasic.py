@@ -23,7 +23,7 @@ KEY_SEQUENCE = 200
 class Automaton:
     """A very simple Prototype Automaton"""
 
-    def __init__(self, value_type, key_type) -> None:
+    def __init__(self, value_type=STORE_ANY, key_type=KEY_SEQUENCE) -> None:
         self.make_automaton_kind = EMPTY
         self._value_type = value_type
         self._key_type = key_type
@@ -38,7 +38,7 @@ class Automaton:
     def store(self):
         return 
 
-    def add_words(self, key, value):
+    def add_word(self, key, value):
         node = self.trie.insert(key)
         node.value = value
 
@@ -60,8 +60,12 @@ class Automaton:
     def longest_prefix(self):
         pass
 
-    def get(self):
-        pass
+    def get(self, pattern, default=None):
+        result, found = self.trie.search(pattern=pattern, default=default)
+        if found == 1:
+            return result.value
+        else:
+            return result
 
     def make_automaton(self):
         """
